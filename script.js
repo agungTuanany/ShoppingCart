@@ -80,11 +80,25 @@ class UI{
         cart = [...cart, cartItem];
         // save cart into local storage
         Storage.saveCart(cart);
-        // set cart values
+        // set cart values | 'this.' refer to inner class.
+        this.setCartValues(cart);
         // display cart item
         // show the cart
       });
     });
+  }
+
+  setCartValues(cart) {
+    let tempTotal = 0;
+    let itemTotal = 0;
+
+    cart.map(item => {
+      tempTotal += item.price * item.amount;
+      itemTotal += item.amount;
+    });
+    cartTotal.innerText = parseFloat(tempTotal.toFixed(2));
+    cartItems.innerText = itemTotal;
+    console.log(cartTotal, cartItems)
   }
 
 }
