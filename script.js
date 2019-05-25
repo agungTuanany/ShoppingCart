@@ -83,6 +83,7 @@ class UI{
         // set cart values | 'this.' refer to inner class.
         this.setCartValues(cart);
         // display cart item
+        this.addCartItem(cartItem);
         // show the cart
       });
     });
@@ -90,16 +91,39 @@ class UI{
 
   setCartValues(cart) {
     let tempTotal = 0;
-    let itemTotal = 0;
+    let itemsTotal = 0;
 
     cart.map(item => {
       tempTotal += item.price * item.amount;
-      itemTotal += item.amount;
+      itemsTotal += item.amount;
     });
     cartTotal.innerText = parseFloat(tempTotal.toFixed(2));
-    cartItems.innerText = itemTotal;
-    console.log(cartTotal, cartItems)
+    cartItems.innerText = itemsTotal;
   }
+
+  addCartItem(item) {
+    const div = document.createElement('div');
+    div.classList.add('cart-item');
+    div.innerHTML = `
+      <!-- cart item -->
+      <img src=${item.image} alt='product'>
+      <div>
+        <h4>${item.title}</h4>
+        <h5>$${item.price}</h5>
+       <!-- data-id is for control functionality -->
+        <span class='remove-item' data-id=${item.id}>remove</span>
+      </div>
+      <div>
+        <i class='fa fa-chevron-up' data-id=${item.id}></i>
+        <p class='item-amount'>${item.amount}</p>
+        <i class='fa fa-chevron-down' data-id=${item.id}></i>
+      </div>
+      <!-- end of cart item -->
+    `;
+    cartContent.appendChild(div);
+    console.log(cartContent)
+  }
+
 
 }
 
