@@ -48,7 +48,7 @@ class UI{
               <img src=${product.image} alt='product' class='product-img'>
               <button class='bag-btn' data-id=${product.id}>
                 <i class='fa fa-shopping-cart'></i>
-                add to bag
+                add to cart
               </button>
             </div>
             <h3>${product.title}</h3>
@@ -147,6 +147,41 @@ class UI{
     cartDOM.classList.remove('showCart');
   }
 
+  cartLogic() {
+    /* hint for accessing method in the class.
+      * using arrow function to referencing the cart in UI class if not we just
+      * reference to the button only*/
+    // clear cart button
+    clearCartBtn.addEventListener('click', () => { this.clearCart(); });
+    // cart functionality
+  }
+
+  clearCart() {
+    let cartItems = cart.map(item => item.id);
+    cartItems.forEach(id => this.removeItem(id));
+    console.log(cartContent.children);
+
+    // removing cart from the DOM
+    while(cartContent.children.length > 0) {
+      cartContent.removeChild(cartContent.children[0]);
+    }
+    this.hideCart();
+  }
+
+  removeItem(id) {
+    cart = cart.filter(item => item.id !== id);
+    // update the value cart
+    this.setCartValues(cart);
+    Storage.saveCart(cart);
+    let button = this.getSingleButton(id);
+    button.disabled = false;
+    button.innerHTML = `<i class='fa fa-shopping-cart'></i>add to cart`;
+
+  }
+
+  getSingleButton(id) {
+    return buttonsDOM.find(button => button.dataset.id === id);
+  }
 
 }
 
@@ -174,13 +209,14 @@ document.addEventListener("DOMContentLoaded", () => {
 const ui = new UI();
 const products = new Products();
 
-  //
+  // Setup app
   ui.setupAPP();
   // get all products
   products.getProducts().then(products => {
     ui.displayProducts(products);
     Storage.saveProducts(products);
   }).then(() => {
-    ui.getBagButtons()
+    ui.getBagButtons();
+    ui.cartLogic();
   });
 });
